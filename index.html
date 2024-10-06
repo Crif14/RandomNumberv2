@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function sanitize(domanda){
+            let sanitized = prompt(domanda)
+            sanitized = sanitized.trim()
+            sanitized =Math.floor(sanitized)
+            while(sanitized===null || isNaN(sanitized)){
+                sanitized = prompt(domanda)
+                console.log("Valore non registrato")
+                sanitized = prompt(domanda)
+                sanitized = sanitized.trim()
+                sanitized = Math.floor(sanitized)
+            }
+            return sanitized
+        }
+        function generateRandomInteger(min, max) {
+            let casualNumber = Math.random()
+            casualNumber = casualNumber * max 
+            casualNumber = Math.floor(casualNumber)
+            return casualNumber
+        }
+        let min = 0
+        let life = 3
+        let max = 0
+        let domanda = "Inserire il livello di difficolta:\n1-Facile(0-10);\n2-Medio(0-50);\n3-Difficile(0-100)"
+        let choise = 0
+        while (choise<1 || choise>3){
+            choise = sanitize(domanda)
+        }
+        switch (choise){
+            case 1:
+                max = 10
+                break
+            case 2:
+                max = 50
+                break
+            case 3:
+                max = 100
+                break
+        }
+        let luckynumber = generateRandomInteger(0, max)
+        let guessed=false
+        let i=life
+        while(i>0 && guessed===false){
+            domanda="Inserire il numero, hai " + i + " vite"
+            let luck = sanitize(domanda)
+            i=i-1
+            if(luck===luckynumber){
+                console.log("Bravo, hai indovinato")
+                guessed=true
+            }else{
+                console.log("Non hai indovinato")
+            }
+        }
+        if(guessed===false){
+            console.log("Mi spiace hai perso, il numero era "+ luckynumber)
+        }
+
+    </script>
+</body>
+</html>
