@@ -6,63 +6,79 @@
     <title>Document</title>
 </head>
 <body>
+    <h1>GUESS THE NUMBER</h1>
+    <div id="div_choise" style="display: block;">
+        Scegliere tra le varie difficolta:<br>
+        1. Facile(1-10)<br>
+        2. Media(1-50)<br>
+        3. Difficile(1-100)
+        <form action="" method="get" name="form_choise">
+        <input id="numchoise" type="number" min="1" max="3"value="1">
+        <input id="buttonchoise" type="button" value="Scelto">
+        </form>
+    </div>
+    <div id="div_number" style="display: none;">
+        ho generato un numero casuale, prova ad indovinarlo
+        <form action="" method="get" name="form_number">
+            <input id="numero" type="number" name="user_guess" value="200">
+            <input id="button" type="button" name="guess" value="Indovina">
+        </form>
+    </div>
+    
     <script>
-        function sanitize(domanda){
-            let sanitized = prompt(domanda)
-            sanitized = sanitized.trim()
-            sanitized =Math.floor(sanitized)
-            while(sanitized===null || isNaN(sanitized)){
-                sanitized = prompt(domanda)
-                console.log("Valore non registrato")
-                sanitized = prompt(domanda)
-                sanitized = sanitized.trim()
-                sanitized = Math.floor(sanitized)
-            }
-            return sanitized
-        }
         function generateRandomInteger(min, max) {
             let casualNumber = Math.random()
-            casualNumber = casualNumber * max 
-            casualNumber = Math.floor(casualNumber)
+            casualNumber = casualNumber * (max-min+1)+min
+            casualNumber = parseInt(casualNumber)
             return casualNumber
+        }    
+        function choises(choice) {
+            switch (parseInt(choice)) {
+                case 1:
+                    return 10;
+                case 2:
+                    return 50;
+                case 3:
+                    return 100;
         }
-        let min = 0
-        let life = 3
-        let max = 0
-        let domanda = "Inserire il livello di difficolta:\n1-Facile(0-10);\n2-Medio(0-50);\n3-Difficile(0-100)"
-        let choise = 0
-        while (choise<1 || choise>3){
-            choise = sanitize(domanda)
-        }
-        switch (choise){
-            case 1:
-                max = 10
-                break
-            case 2:
-                max = 50
-                break
-            case 3:
-                max = 100
-                break
-        }
-        let luckynumber = generateRandomInteger(0, max)
-        let guessed=false
-        let i=life
-        while(i>0 && guessed===false){
-            domanda="Inserire il numero, hai " + i + " vite"
-            let luck = sanitize(domanda)
-            i=i-1
-            if(luck===luckynumber){
-                console.log("Bravo, hai indovinato")
-                guessed=true
-            }else{
-                console.log("Non hai indovinato")
-            }
-        }
-        if(guessed===false){
-            console.log("Mi spiace hai perso, il numero era "+ luckynumber)
         }
 
+        let buttonchoise = document.querySelector("#buttonchoise");
+        let div_choise = document.querySelector("#div_choise");
+        let div_number = document.querySelector("#div_number");
+        let min= 1
+        buttonchoise.addEventListener("click", function (event) {
+            event.preventDefault();
+            let choise = document.querySelector("#numchoise").value;
+            if (choise >= 1 && choise <= 3) {
+                console.log("Scelta valida:");
+                div_choise.style.display = "none";
+                div_number.style.display = "block"; //Scompare la sezione di scelta difficoltà e appare quella per indovinare
+                let max = choises(choise);
+                let rnumber = generateRandomInteger(min, max);
+                //console.log("Numero casuale generato:", rnumber); per vedere il numero generato
+                let button = document.querySelector('#button');
+                button.addEventListener("click", function (event) {
+                    let guess = document.querySelector('#numero').value;
+                    guess = parseInt(guess.trim());
+                    if (isNaN(guess)) {
+                        console.log("Numero non valido, reinserire");
+                    } else { // Controllo se l'utente ha indovinato il numero
+                        if (guess === rnumber) {
+                            console.log("Congratulazioni, hai indovinato il numero!");
+                        }else{ 
+                            if (guess > rnumber) {
+                            console.log("Il numero è più piccolo!");
+                            } else {
+                                console.log("Il numero è più grande!");
+                            }
+                        }
+                    }
+                });
+            } else {
+                console.log("Scelta non valida");
+            }
+        });
     </script>
 </body>
 </html>
